@@ -44,7 +44,7 @@ export default function Component() {
         <section className="py-12">
           <h1 className="mb-4 text-4xl font-bold text-gray-800">Welcome</h1>
           <p className="text-gray-600">
-            Our mission is to be the world's leading software for drinking scoreboards and to stop overconsumption.
+            Our mission is to be the world&apos;s leading software for drinking scoreboards and to stop overconsumption.
 
             Stop keeping track of how much each person has had to drink in your head. Use the Boggs Scoreboard today to stop overconsumption!
           </p>
