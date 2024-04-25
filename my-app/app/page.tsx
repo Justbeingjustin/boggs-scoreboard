@@ -6,7 +6,7 @@ import Image from "next/image";
  * Documentation: https://v0.dev/docs#integrating-generated-code-into-your-nextjs-app
  */
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import Link from "next/link";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
@@ -36,10 +36,56 @@ export default function Component() {
 
   };
 
+  useEffect(() => {
+    console.log('Component mounted');
+    // Dynamically load the cast.js script
+    const script = document.createElement('script');
+    script.src = 'https://cdnjs.cloudflare.com/ajax/libs/castjs/5.3.0/cast.min.js';
+    script.onload = () => {
+      // Script has loaded
+      console.log('Cast.js has been loaded successfully');
+
+      // Create new Castjs instance after the script is loaded
+      const cjs = new Castjs();
+
+      console.log("2")
+
+      // Setup event listener on the button
+      document.getElementById('cast').addEventListener('click', () => {
+        if (cjs.available) {
+          // Cast a video with additional options
+          cjs.cast('https://pro-pixelgreet-images.s3.amazonaws.com/profile-pictures/10279_3.jpg', {
+            poster: 'https://castjs.io/media/poster.jpg',
+            title: 'Sintel',
+            description: 'Third Open Movie by Blender Foundation',
+            subtitles: [{
+              active: true,
+              label: 'English',
+              src: 'https://castjs.io/media/english.vtt'
+            }, {
+              label: 'Spanish',
+              src: 'https://castjs.io/media/spanish.vtt'
+            }],
+          });
+        } else {
+          console.log('Casting is not available');
+        }
+      });
+    };
+    document.body.appendChild(script);
+
+    // Cleanup function to remove script and event listener
+    return () => {
+      document.body.removeChild(script);
+      // document.getElementById('cast')?.removeEventListener('click', handleClick);
+    };
+  }, []);
+
   // Sorting players by beers in descending order
   const sortedPlayers = [...players].sort((a, b) => Number(b.beers) - Number(a.beers));
   return (
     <>
+
       <header className="fixed top-0 left-0 right-0 z-50 h-16 bg-black">
         <nav className="container mx-auto flex h-full items-center justify-between px-4">
           <Link className="text-xl font-bold text-white" href="#">
@@ -55,6 +101,7 @@ export default function Component() {
             Stop keeping track of how much each person has had to drink in your head. Use the Boggs Scoreboard today to stop overconsumption!
           </p>
         </section>
+        <button id="cast">Cast23</button>
         <section className="py-12">
           <h2 className="mb-4 text-2xl font-bold text-gray-800">Add Player</h2>
           <div className="flex flex-col gap-4 md:flex-row">
