@@ -14,7 +14,12 @@ import { CardTitle, CardHeader, CardContent, Card, CardFooter } from "@/componen
 import { TableHead, TableRow, TableHeader, TableCell, TableBody, Table } from "@/components/ui/table";
 import { AvatarImage, AvatarFallback, Avatar } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
-
+declare global {
+  class Castjs {
+    available: boolean;
+    cast(url: string, options: any): void;
+  }
+}
 export default function Component() {
   const [name, setName] = useState('');
   const [beers, setBeers] = useState('');
@@ -35,49 +40,54 @@ export default function Component() {
   const createScoreboard = () => {
 
   };
-
   useEffect(() => {
     console.log('Component mounted');
+
     // Dynamically load the cast.js script
     const script = document.createElement('script');
     script.src = 'https://cdnjs.cloudflare.com/ajax/libs/castjs/5.3.0/cast.min.js';
+
     script.onload = () => {
-      // Script has loaded
       console.log('Cast.js has been loaded successfully');
 
       // Create new Castjs instance after the script is loaded
       const cjs = new Castjs();
 
-      console.log("2")
-
-      // Setup event listener on the button
-      document.getElementById('cast').addEventListener('click', () => {
-        if (cjs.available) {
-          // Cast a video with additional options
-          cjs.cast('https://pro-pixelgreet-images.s3.amazonaws.com/profile-pictures/10279_3.jpg', {
-            poster: 'https://castjs.io/media/poster.jpg',
-            title: 'Sintel',
-            description: 'Third Open Movie by Blender Foundation',
-            subtitles: [{
-              active: true,
-              label: 'English',
-              src: 'https://castjs.io/media/english.vtt'
-            }, {
-              label: 'Spanish',
-              src: 'https://castjs.io/media/spanish.vtt'
-            }],
-          });
-        } else {
-          console.log('Casting is not available');
-        }
-      });
+      const castElement = document.getElementById('cast');
+      if (castElement) {
+        castElement.addEventListener('click', () => {
+          if (cjs.available) {
+            cjs.cast('https://pro-pixelgreet-images.s3.amazonaws.com/profile-pictures/10279_3.jpg', {
+              poster: 'https://castjs.io/media/poster.jpg',
+              title: 'Sintel',
+              description: 'Third Open Movie by Blender Foundation',
+              subtitles: [{
+                active: true,
+                label: 'English',
+                src: 'https://castjs.io/media/english.vtt'
+              }, {
+                label: 'Spanish',
+                src: 'https://castjs.io/media/spanish.vtt'
+              }],
+            });
+          } else {
+            console.log('Casting is not available');
+          }
+        });
+      }
     };
+
     document.body.appendChild(script);
 
     // Cleanup function to remove script and event listener
     return () => {
       document.body.removeChild(script);
-      // document.getElementById('cast')?.removeEventListener('click', handleClick);
+      const castElement = document.getElementById('cast');
+      if (castElement) {
+        castElement.removeEventListener('click', () => {
+          // ... your code here ...
+        });
+      }
     };
   }, []);
 
