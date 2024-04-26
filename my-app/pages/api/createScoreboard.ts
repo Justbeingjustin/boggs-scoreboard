@@ -12,9 +12,9 @@ export default async function handler(req: any, res: any) {
 
         // Load the image using Jimp
         const image = await Jimp.read(imagePath);
-        const font = await Jimp.loadFont(Jimp.FONT_SANS_32_WHITE); // Load a built-in white font
+        const font = await Jimp.loadFont(path.join(process.cwd(), 'public/open-sans-32-white.fnt'));
 
-        // Add text to the image
+
         image.print(font, 250, 30, "Players", 500); // Ensure your text fits within the image width
         image.print(font, 250, 70, "# of beers", 500);
         image.print(font, 250, 120, r.ScoreRows[0].Name, 500);
