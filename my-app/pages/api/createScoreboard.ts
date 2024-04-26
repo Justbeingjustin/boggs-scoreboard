@@ -7,12 +7,13 @@ import request from 'request'; // Consider using modern alternatives like 'axios
 export default async function handler(req: any, res: any) {
     try {
         const r: CreateScoreboardRequest = req.body;
-        const imagePath = path.resolve('./public/images/sample.jpg'); // Path to your image
+        const imagePath = path.resolve('./public/images/1.jpg'); // Path to your image
         const guid = uuidv4();
 
 
         //const plugin = require.resolve('@jimp/plugin-print');
-        const fontPath = path.resolve("./assets/open-sans-32-black.fnt")
+        const fontPath = path.resolve("./assets/open-sans-32-white.fnt")
+        const fontPathSmall = path.resolve("./assets/open-sans-32-white.fnt")
 
         console.info("Image path:", imagePath);
 
@@ -23,14 +24,20 @@ export default async function handler(req: any, res: any) {
 
 
         const font = await Jimp.loadFont(fontPath);
+        const fontSmall = await Jimp.loadFont(fontPathSmall);
 
-        console.log("3")
 
 
-        image.print(font, 250, 30, "Players", 500); // Ensure your text fits within the image width
-        image.print(font, 250, 70, "# of beers", 500);
-        image.print(font, 250, 120, r.ScoreRows[0].Name, 500);
-
+        image.print(font, 75, 50, "Players", 500); // Ensure your text fits within the image width
+        image.print(font, 300, 50, "# of Beers", 1500);
+        let y = 100;
+        const lineHeight = 40; // Change this to the desired line height
+        const sortedScoreRows = r.ScoreRows.slice().sort((a, b) => b.Score - a.Score);
+        for (const scoreRow of sortedScoreRows) {
+            image.print(fontSmall, 75, y, scoreRow.Name);
+            image.print(fontSmall, 350, y, scoreRow.Score);
+            y += lineHeight;
+        }
         // Get image buffer
         const imageBuffer = await image.getBufferAsync(Jimp.MIME_JPEG);
 
