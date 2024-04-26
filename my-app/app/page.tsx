@@ -25,6 +25,9 @@ export default function Component() {
   const [beers, setBeers] = useState('');
   const [players, setPlayers] = useState<{ name: string; beers: string; }[]>([]);
 
+
+
+
   const addPlayer = () => {
     if (name && beers) {
       setPlayers([...players, { name, beers }]);
@@ -39,7 +42,55 @@ export default function Component() {
 
   const createScoreboard = () => {
 
+    const request = {
+      ScoreRows: players.map((player) => ({
+        Name: player.name,
+        Score: player.beers
+      }))
+    };
+
+    fetch('/api/createScoreboard', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(request)
+    }).then((response) => {
+      if (response.ok) {
+        return response.json();
+      } else {
+        throw new Error('Failed to create scoreboard');
+      }
+    }).then((payload) => {
+      console.log(payload);
+      alert('Scoreboard created successfully');
+      const cjs = new Castjs();
+      if (cjs.available) {
+        cjs.cast(payload.url, {
+          poster: 'https://castjs.io/media/poster.jpg',
+          title: 'Sintel',
+          description: 'Third Open Movie by Blender Foundation',
+          subtitles: [{
+            active: true,
+            label: 'English',
+            src: 'https://castjs.io/media/english.vtt'
+          }, {
+            label: 'Spanish',
+            src: 'https://castjs.io/media/spanish.vtt'
+          }],
+        });
+      } else {
+        console.log('Casting is not available');
+      }
+
+    }).catch((error) => {
+      console.error(error);
+      alert('Failed to create scoreboard');
+    });
+
   };
+
+
   useEffect(() => {
     console.log('Component mounted');
 
@@ -56,23 +107,7 @@ export default function Component() {
       const castElement = document.getElementById('cast');
       if (castElement) {
         castElement.addEventListener('click', () => {
-          if (cjs.available) {
-            cjs.cast('https://pro-pixelgreet-images.s3.amazonaws.com/profile-pictures/10279_3.jpg', {
-              poster: 'https://castjs.io/media/poster.jpg',
-              title: 'Sintel',
-              description: 'Third Open Movie by Blender Foundation',
-              subtitles: [{
-                active: true,
-                label: 'English',
-                src: 'https://castjs.io/media/english.vtt'
-              }, {
-                label: 'Spanish',
-                src: 'https://castjs.io/media/spanish.vtt'
-              }],
-            });
-          } else {
-            console.log('Casting is not available');
-          }
+
         });
       }
     };

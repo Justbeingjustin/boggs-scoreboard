@@ -2,6 +2,7 @@ import { CreateScoreboardRequest } from "@/app/interfaces/CreateScoreboardReques
 import sharp from 'sharp';
 import fs from 'fs';
 import path from 'path';
+import { v4 as uuidv4 } from 'uuid';
 
 
 export default async function handler(req: any, res: any) {
@@ -9,12 +10,11 @@ export default async function handler(req: any, res: any) {
 
         const request: CreateScoreboardRequest = req.body;
 
-        console.log("yay!")
-
-        console.log(request);
 
         const imagePath = path.resolve('./public/images/sample.jpg'); // Path to your image
-        const outputImagePath = path.resolve('./public/images/output.jpg'); // Path for the new image
+
+        const guid = uuidv4();
+
 
         const svgText = `<svg width="500" height="500">
         <style>
@@ -26,24 +26,46 @@ export default async function handler(req: any, res: any) {
         <text x="250" y="120" class="title">${request.ScoreRows[0].Name}</text>
       </svg>`;
 
-        const image = await sharp(imagePath)
+        const imageBuffer = await sharp(imagePath)
             .composite([
-                {
-                    input: Buffer.from(svgText),
-                    top: 0,
-                    left: 0,
-                }
+                { input: Buffer.from(svgText, 'utf-8'), top: 0, left: 0 }
             ])
-            .toFile(outputImagePath); // Saving the processed image to a file
+            .jpeg() // Output as PNG (or jpeg, webp, etc.)
+            .toBuffer();
 
-        res.status(200).json({ message: 'Image processed and saved successfully', path: '/output.jpg' });
+
+
+
+        var request2 = require('request');
+        var fs = require('fs');
+        var options = {
+            'method': 'POST',
+            'url': 'https://api.app.pixelgreet.com/Image/UploadImage2',
+            'headers': {
+            },
+            formData: {
+                'Image': {
+                    'value': imageBuffer, // Updated to use the new image path
+                    'options': {
+                        'filename': `${guid}.jpg`,
+                        'contentType': null
+                    }
+                },
+                'FileName': guid
+            }
+        };
+        request2(options, function (error: any, response: any) {
+            if (error) throw new Error(error);
+            console.log(response.body);
+            console.log("yay!!!")
+            res.status(200).json({ url: response.body, errorMessage: "", success: true });
+            return;
+        });
+
 
     } catch (error) {
         console.log(error);
-        return res.status(200).json({
-            success: false,
-            errorMessage: "Unable to send email.",
+        return res.status(200).json({ url: "", errorMessage: "an error occured", success: false });
 
-        });
     }
 }
