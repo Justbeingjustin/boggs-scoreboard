@@ -14,7 +14,7 @@ export default async function handler(req: any, res: any) {
 
         // Load the image using Jimp
         const image = await Jimp.read(imagePath);
-
+        return res.status(200).json({ url: "2", errorMessage: "", success: true });
         const font = await Jimp.loadFont(path.join(process.cwd(), 'public/open-sans-32-white.fnt'));
 
 
