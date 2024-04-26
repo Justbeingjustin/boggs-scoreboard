@@ -64,9 +64,7 @@ export default function Component() {
       const payload = await response.json();
       console.log(payload);
 
-      if (payload.success === false) {
-        return;
-      }
+
 
       alert('Scoreboard created successfully');
       const cjs = new Castjs();
@@ -149,7 +147,7 @@ export default function Component() {
             Stop keeping track of how much each person has had to drink in your head. Use the Boggs Scoreboard today to stop overconsumption!
           </p>
         </section>
-        <button id="cast">Cast23</button>
+
         <section className="py-12">
           <h2 className="mb-4 text-2xl font-bold text-gray-800">Add Player</h2>
           <div className="flex flex-col gap-4 md:flex-row">
