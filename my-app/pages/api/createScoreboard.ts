@@ -18,8 +18,8 @@ export default async function handler(req: any, res: any) {
 
         const svgText = `<svg width="500" height="500">
         <style>
-          .title { fill: #fff; font-size: 48px; text-anchor: middle; font-family: "Roboto";}
-          .header { fill: #fff; font-size: 36px; text-anchor: middle; font-weight: bold; font-family: "Roboto";}
+          .title { fill: #fff; font-size: 48px; text-anchor: middle; font-family: "Arial";}
+          .header { fill: #fff; font-size: 36px; text-anchor: middle; font-weight: bold; font-family: "Arial";}
         </style>
         <text x="250" y="30" class="header">Players</text>
         <text x="250" y="70" class="header"># of beers</text>
