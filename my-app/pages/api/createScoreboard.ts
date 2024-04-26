@@ -19,6 +19,8 @@ export default async function handler(req: any, res: any) {
 
 
 
+
+
         // Load the image using Jimp
         const image = await Jimp.read(imagePath);
 
