@@ -20,9 +20,9 @@ export default async function handler(req: any, res: any) {
 
         // Load the image using Jimp
         const image = await Jimp.read(imagePath);
-        const fontPath = path.resolve(jimpFont); // Path to your image
 
-        const font = await Jimp.loadFont(fontPath);
+
+        const font = await Jimp.loadFont(jimpFont);
 
 
         image.print(font, 250, 30, "Players", 500); // Ensure your text fits within the image width
