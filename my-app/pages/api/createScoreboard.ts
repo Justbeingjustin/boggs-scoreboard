@@ -15,27 +15,18 @@ export default async function handler(req: any, res: any) {
 
         const guid = uuidv4();
 
-
-        let basePath = process.cwd()
-        if (process.env.NODE_ENV === 'production') {
-            basePath = path.join(process.cwd(), '.next/server/chunks')
-        }
-
-        path.resolve(basePath, 'fonts', 'fonts.conf')
-        path.resolve(basePath, 'fonts', 'Jersey15-Regular.ttf')
+        path.resolve(process.cwd(), 'fonts', 'fonts.conf');
+        path.resolve(process.cwd(), 'fonts', 'Jersey15-Regular.ttf');
 
 
-        const svgText = `<svg width="500" height="200">
-        <style type="text/css">
-          @font-face {
-            font-family: Jersey 15 Regular;
-            src: './fonts/Jersey15-Regular.ttf';
-          }
+        const svgText = `<svg width="500" height="500">
+        <style>
+          .title { fill: #fff; font-size: 48px; text-anchor: middle; font-family: "Jersey15-Regular";}
+          .header { fill: #fff; font-size: 36px; text-anchor: middle; font-weight: bold; font-family: "Jersey15-Regular";}
         </style>
-        <text x="0" y="0" font-family="Arial Bold" font-size="48" font-weight="bold" letter-spacing="-0.7">
-          <tspan x="0" dy="1.2em">Lorem Ipsum</tspan>
-          <tspan x="0" dy="1.2em" dx=".4em" fill="#6356fd">dolor sit</tspan> <tspan dx=".05em">amet.</tspan>
-        </text>
+        <text x="250" y="30" class="header">Players</text>
+        <text x="250" y="70" class="header"># of beers</text>
+        <text x="250" y="120" class="title">${request.ScoreRows[0].Name}</text>
       </svg>`;
 
         const imageBuffer = await sharp(imagePath)
