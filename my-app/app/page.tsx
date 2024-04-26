@@ -66,7 +66,7 @@ export default function Component() {
 
 
 
-      alert('Scoreboard created successfully');
+      //alert('Scoreboard created successfully');
       const cjs = new Castjs();
       if (cjs.available) {
         cjs.cast(payload.url, {
@@ -86,6 +86,7 @@ export default function Component() {
         console.log('Casting is not available');
       }
     } catch (error) {
+
       console.error(error);
       alert('Failed to create scoreboard');
     }
