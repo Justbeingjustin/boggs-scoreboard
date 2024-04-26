@@ -12,20 +12,19 @@ export default async function handler(req: any, res: any) {
 
 
         //const plugin = require.resolve('@jimp/plugin-print');
-        const jimpFont = path.resolve('./fonts/open-sans/open-sans-32-black/open-sans-32-black.fnt');
+        const fontPath = path.resolve("./assets/open-sans-32-black.fnt")
 
         console.info("Image path:", imagePath);
-        console.info("Font path:", jimpFont);
-
-
-
-
 
         // Load the image using Jimp
         const image = await Jimp.read(imagePath);
 
+        console.log(fontPath);
 
-        const font = await Jimp.loadFont(jimpFont);
+
+        const font = await Jimp.loadFont(fontPath);
+
+        console.log("3")
 
 
         image.print(font, 250, 30, "Players", 500); // Ensure your text fits within the image width
