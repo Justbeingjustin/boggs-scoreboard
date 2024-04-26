@@ -14,9 +14,10 @@ export default async function handler(req: any, res: any) {
 
         // Load the image using Jimp
         const image = await Jimp.read(imagePath);
-        const font = await Jimp.loadFont(path.join(process.cwd(), 'public/open-sans-32-white.fnt'));
 
-        return res.status(200).json({ url: "3", errorMessage: "", success: true });
+        const fontPath = path.resolve('./public/open-sans-32-white.fnt'); // Path to your image
+
+        const font = await Jimp.loadFont(fontPath);
 
 
         image.print(font, 250, 30, "Players", 500); // Ensure your text fits within the image width
