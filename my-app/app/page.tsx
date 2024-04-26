@@ -73,8 +73,8 @@ export default function Component() {
       if (cjs.available) {
         cjs.cast(payload.url, {
           poster: 'https://castjs.io/media/poster.jpg',
-          title: 'Sintel',
-          description: 'Third Open Movie by Blender Foundation',
+          title: 'Boggs Scoreboard',
+          description: 'Created by Justin Gerber',
           subtitles: [{
             active: true,
             label: 'English',
