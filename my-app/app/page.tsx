@@ -156,15 +156,16 @@ export default function Component() {
           </p>
         </section>
 
-
-        <section className="py-12">
-          <h2 className="mb-4 text-2xl font-bold text-gray-800">Add Player</h2>
-          <div className="flex flex-col gap-4 md:flex-row">
-            <Input value={name} onChange={(e) => setName(e.target.value)} className="w-full md:w-1/3" placeholder="Name" type="text" />
-            <Input value={beers} onChange={(e) => setBeers(e.target.value)} className="w-full md:w-1/3" placeholder="Number of Beers" type="number" />
-            <Button onClick={addPlayer} className="w-full md:w-1/3">Add</Button>
-          </div>
-        </section>
+        {!url && (
+          <section className="py-12">
+            <h2 className="mb-4 text-2xl font-bold text-gray-800">Add Player</h2>
+            <div className="flex flex-col gap-4 md:flex-row">
+              <Input value={name} onChange={(e) => setName(e.target.value)} className="w-full md:w-1/3" placeholder="Name" type="text" />
+              <Input value={beers} onChange={(e) => setBeers(e.target.value)} className="w-full md:w-1/3" placeholder="Number of Beers" type="number" />
+              <Button onClick={addPlayer} className="w-full md:w-1/3">Add</Button>
+            </div>
+          </section>
+        )}
         {players.length > 0 && !url && (
           <section className="py-12">
             <h2 className="mb-4 text-2xl font-bold text-gray-800">Scoreboard</h2>
