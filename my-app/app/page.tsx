@@ -14,6 +14,7 @@ import { CardTitle, CardHeader, CardContent, Card, CardFooter } from "@/componen
 import { TableHead, TableRow, TableHeader, TableCell, TableBody, Table } from "@/components/ui/table";
 import { AvatarImage, AvatarFallback, Avatar } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
+import { Loader } from "@/components/ui/Loader";
 declare global {
   class Castjs {
     available: boolean;
@@ -24,8 +25,9 @@ export default function Component() {
   const [name, setName] = useState('');
   const [beers, setBeers] = useState('');
   const [players, setPlayers] = useState<{ name: string; beers: string; }[]>([]);
+  const [loading, setLoading] = useState(false);
 
-
+  const [castjs, setCastjs] = useState<any>(null); // State to hold the Castjs instance
 
 
   const addPlayer = () => {
@@ -41,6 +43,7 @@ export default function Component() {
   };
 
   const createScoreboard = async () => {
+    setLoading(true);
     const request = {
       ScoreRows: players.map(player => ({
         Name: player.name,
@@ -64,12 +67,10 @@ export default function Component() {
       const payload = await response.json();
       console.log(payload);
 
+      setLoading(false);
 
-
-      //alert('Scoreboard created successfully');
-      const cjs = new Castjs();
-      if (cjs.available) {
-        cjs.cast(payload.url, {
+      if (castjs && castjs.available) {
+        castjs.cast(payload.url, {
           poster: 'https://castjs.io/media/poster.jpg',
           title: 'Boggs Scoreboard',
           description: 'Created by Justin Gerber',
@@ -80,51 +81,31 @@ export default function Component() {
           }, {
             label: 'Spanish',
             src: 'https://castjs.io/media/spanish.vtt'
-          }],
+          }]
         });
       } else {
         console.log('Casting is not available');
       }
     } catch (error) {
-
       console.error(error);
+      setLoading(false);
       alert('Failed to create scoreboard');
     }
   };
 
-
   useEffect(() => {
     console.log('Component mounted');
-
-    // Dynamically load the cast.js script
     const script = document.createElement('script');
     script.src = 'https://cdnjs.cloudflare.com/ajax/libs/castjs/5.3.0/cast.min.js';
-
     script.onload = () => {
       console.log('Cast.js has been loaded successfully');
-
-      // Create new Castjs instance after the script is loaded
-      const cjs = new Castjs();
-
-      const castElement = document.getElementById('cast');
-      if (castElement) {
-        castElement.addEventListener('click', () => {
-
-        });
-      }
+      setCastjs(new Castjs()); // Set the Castjs instance in state
     };
-
     document.body.appendChild(script);
 
-    // Cleanup function to remove script and event listener
     return () => {
       document.body.removeChild(script);
-      const castElement = document.getElementById('cast');
-      if (castElement) {
-        castElement.removeEventListener('click', () => {
-          // ... your code here ...
-        });
-      }
+      console.log('Cleanup script and instance');
     };
   }, []);
 
@@ -140,6 +121,11 @@ export default function Component() {
           </Link>
         </nav>
       </header>
+      {loading && (
+        <div className="fixed inset-0 bg-black bg-opacity-25 flex justify-center items-center z-10">
+          <Loader />
+        </div>
+      )}
       <main className="container mx-auto mt-20 max-w-3xl px-4">
         <section className="py-12">
           <h1 className="mb-4 text-4xl font-bold text-gray-800">Welcome</h1>
