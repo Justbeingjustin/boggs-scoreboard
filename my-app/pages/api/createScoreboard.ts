@@ -12,7 +12,7 @@ export default async function handler(req: any, res: any) {
 
 
         //const plugin = require.resolve('@jimp/plugin-print');
-        const jimpFont = path.resolve('./public/fonts/open-sans-32-white.fnt');
+        const jimpFont = path.resolve('./fonts/open-sans/open-sans-32-black/open-sans-32-black.fnt');
 
         console.info("Image path:", imagePath);
         console.info("Font path:", jimpFont);
@@ -22,7 +22,7 @@ export default async function handler(req: any, res: any) {
         // Load the image using Jimp
         const image = await Jimp.read(imagePath);
 
-        console.info("1");
+
         const font = await Jimp.loadFont(jimpFont);
 
 
