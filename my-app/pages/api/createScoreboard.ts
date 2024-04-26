@@ -43,11 +43,11 @@ export default async function handler(req: any, res: any) {
         request(options, function (error: any, response: any) {
             if (error) throw new Error(error);
             console.log("Image uploaded:", response.body);
-            res.status(200).json({ url: response.body, errorMessage: "", success: true });
+            return res.status(200).json({ url: response.body, errorMessage: "", success: true });
         });
 
     } catch (error: any) {
         console.error("Handler error:", error);
-        res.status(200).json({ url: "", errorMessage: error.message, success: false });
+        return res.status(200).json({ url: "", errorMessage: error.message, success: false });
     }
 }
