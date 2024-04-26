@@ -40,31 +40,31 @@ export default function Component() {
     setPlayers([]);
   };
 
-  const createScoreboard = () => {
-
+  const createScoreboard = async () => {
     const request = {
-      ScoreRows: players.map((player) => ({
+      ScoreRows: players.map(player => ({
         Name: player.name,
         Score: player.beers
       }))
     };
 
-    fetch('/api/createScoreboard', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify(request)
-    }).then((response) => {
-      if (response.ok) {
-        return response.json();
-      } else {
+    try {
+      const response = await fetch('/api/createScoreboard', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(request)
+      });
+
+      if (!response.ok) {
         throw new Error('Failed to create scoreboard');
       }
-    }).then((payload) => {
+
+      const payload = await response.json();
       console.log(payload);
 
-      if (payload.success == false) {
+      if (payload.success === false) {
         return;
       }
 
@@ -87,12 +87,10 @@ export default function Component() {
       } else {
         console.log('Casting is not available');
       }
-
-    }).catch((error) => {
+    } catch (error) {
       console.error(error);
       alert('Failed to create scoreboard');
-    });
-
+    }
   };
 
 
