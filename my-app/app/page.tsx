@@ -132,7 +132,7 @@ export default function Component() {
           <p className="text-gray-600">
 
             This was loosely inspired by season 10 episode 1 of It&apos;s Always Sunny in Philadelphia. The gang tries to beat a record set by Wade Boggs of 70 drinks on a cross-country flight. The Boggs Scoreboard should be used as a tool to stop overconsumption of alcohol.
-            This will use google chromecast to cast the scoreboard to a TV. The scoreboard will display the top scores of the players.
+
           </p>
 
 
