@@ -46,8 +46,8 @@ export default async function handler(req: any, res: any) {
             res.status(200).json({ url: response.body, errorMessage: "", success: true });
         });
 
-    } catch (error) {
+    } catch (error: any) {
         console.error("Handler error:", error);
-        res.status(500).json({ url: "", errorMessage: "An error occurred", success: false });
+        res.status(200).json({ url: "", errorMessage: error.message, success: false });
     }
 }

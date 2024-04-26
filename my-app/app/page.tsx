@@ -63,6 +63,11 @@ export default function Component() {
       }
     }).then((payload) => {
       console.log(payload);
+
+      if (payload.success == false) {
+        return;
+      }
+
       alert('Scoreboard created successfully');
       const cjs = new Castjs();
       if (cjs.available) {
