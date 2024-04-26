@@ -27,6 +27,8 @@ export default function Component() {
   const [players, setPlayers] = useState<{ name: string; beers: string; }[]>([]);
   const [loading, setLoading] = useState(false);
 
+  const [url, setURL] = useState('');
+
   const [castjs, setCastjs] = useState<any>(null); // State to hold the Castjs instance
 
 
@@ -39,8 +41,29 @@ export default function Component() {
   };
 
   const clearScoreboard = () => {
+    setURL('');
     setPlayers([]);
   };
+
+  const castScoreboard = async () => {
+    if (castjs && castjs.available) {
+      castjs.cast(url, {
+        poster: 'https://castjs.io/media/poster.jpg',
+        title: 'Boggs Scoreboard',
+        description: 'Created by Justin Gerber',
+        subtitles: [{
+          active: true,
+          label: 'English',
+          src: 'https://castjs.io/media/english.vtt'
+        }, {
+          label: 'Spanish',
+          src: 'https://castjs.io/media/spanish.vtt'
+        }]
+      });
+    } else {
+      console.log('Casting is not available');
+    }
+  }
 
   const createScoreboard = async () => {
     setLoading(true);
@@ -68,24 +91,11 @@ export default function Component() {
       console.log(payload);
 
       setLoading(false);
+      setURL(payload.url);
 
-      if (castjs && castjs.available) {
-        castjs.cast(payload.url, {
-          poster: 'https://castjs.io/media/poster.jpg',
-          title: 'Boggs Scoreboard',
-          description: 'Created by Justin Gerber',
-          subtitles: [{
-            active: true,
-            label: 'English',
-            src: 'https://castjs.io/media/english.vtt'
-          }, {
-            label: 'Spanish',
-            src: 'https://castjs.io/media/spanish.vtt'
-          }]
-        });
-      } else {
-        console.log('Casting is not available');
-      }
+
+
+
     } catch (error) {
       console.error(error);
       setLoading(false);
@@ -155,7 +165,7 @@ export default function Component() {
             <Button onClick={addPlayer} className="w-full md:w-1/3">Add</Button>
           </div>
         </section>
-        {players.length > 0 && (
+        {players.length > 0 && !url && (
           <section className="py-12">
             <h2 className="mb-4 text-2xl font-bold text-gray-800">Scoreboard</h2>
             <Card>
@@ -196,13 +206,32 @@ export default function Component() {
                 </Table>
               </CardContent>
               <CardFooter className="flex justify-end gap-2">
-                <Button onClick={clearScoreboard}>Clear</Button>
-                <Button onClick={createScoreboard}>Cast to Tv</Button>
+                <Button onClick={clearScoreboard}>Reset</Button>
+                <Button onClick={createScoreboard}>Create</Button>
+
               </CardFooter>
             </Card>
           </section>
         )}
-      </main>
+        {url && (
+          <section className="py-12">
+            <Card>
+              <CardHeader>
+                <CardTitle>Scoreboard</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="flex items-center justify-center gap-2">
+                  <img src={url} alt="Scoreboard GIF" />
+                </div>
+              </CardContent>
+              <CardFooter className="flex justify-end gap-2">
+                <Button onClick={clearScoreboard}>Reset</Button>
+                <Button onClick={castScoreboard}>Cast to Tv</Button>
+              </CardFooter>
+            </Card>
+          </section>
+        )}
+      </main >
     </>
   );
 }
