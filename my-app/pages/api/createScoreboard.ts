@@ -10,10 +10,11 @@ export default async function handler(req: any, res: any) {
         const imagePath = path.resolve('./public/images/sample.jpg'); // Path to your image
         const guid = uuidv4();
 
-        return res.status(200).json({ url: "success", errorMessage: "", success: true });
+
 
         // Load the image using Jimp
         const image = await Jimp.read(imagePath);
+
         const font = await Jimp.loadFont(path.join(process.cwd(), 'public/open-sans-32-white.fnt'));
 
 
@@ -50,6 +51,6 @@ export default async function handler(req: any, res: any) {
 
     } catch (error: any) {
         console.error("Handler error:", error);
-        return res.status(200).json({ url: "", errorMessage: error.message, success: false });
+        return res.status(200).json({ url: "", errorMessage: error, success: false });
     }
 }
