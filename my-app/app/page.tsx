@@ -128,13 +128,24 @@ export default function Component() {
       )}
       <main className="container mx-auto mt-20 max-w-3xl px-4">
         <section className="py-12">
-          <h1 className="mb-4 text-4xl font-bold text-gray-800">Welcome</h1>
+          <h1 className="mb-4 text-4xl font-bold text-gray-800">Welcome to the Boggs Scoreboard</h1>
           <p className="text-gray-600">
-            Our mission is to be the world&apos;s leading software for drinking scoreboards and to stop overconsumption.
-            Stop keeping track of how much each person has had to drink in your head. Use the Boggs Scoreboard today to stop overconsumption!
+
+            This was loosely inspired by season 10 episode 1 of It&apos;s Always Sunny in Philadelphia. The gang tries to beat a record set by Wade Boggs of 70 drinks on a cross-country flight. The Boggs Scoreboard should be used as a tool to stop overconsumption of alcohol.
+            This will use google chromecast to cast the scoreboard to a TV. The scoreboard will display the top scores of the players.
+          </p>
+
+
+        </section>
+
+        <section className="py-12">
+          <h1 className="mb-4 text-4xl font-bold text-gray-800">Instructions</h1>
+
+          <p className="text-gray-600">
+            This will use google chromecast to cast the scoreboard to a television. Click the add button to add player(s) to the scoreboard. Then click the cast to Tv button.
           </p>
         </section>
-        <button id="cast">Cast23</button>
+
 
         <section className="py-12">
           <h2 className="mb-4 text-2xl font-bold text-gray-800">Add Player</h2>
@@ -186,7 +197,7 @@ export default function Component() {
               </CardContent>
               <CardFooter className="flex justify-end gap-2">
                 <Button onClick={clearScoreboard}>Clear</Button>
-                <Button onClick={createScoreboard}>Create Scoreboard</Button>
+                <Button onClick={createScoreboard}>Cast to Tv</Button>
               </CardFooter>
             </Card>
           </section>
