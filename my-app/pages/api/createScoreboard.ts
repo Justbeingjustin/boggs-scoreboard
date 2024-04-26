@@ -1,74 +1,64 @@
 import { CreateScoreboardRequest } from "@/app/interfaces/CreateScoreboardRequest";
-import sharp from 'sharp';
-import fs from 'fs';
+import Jimp from 'jimp';
 import path from 'path';
 import { v4 as uuidv4 } from 'uuid';
-
+import request from 'request'; // Consider using modern alternatives like 'axios' or 'node-fetch'
 
 export default async function handler(req: any, res: any) {
     try {
-
-        const request: CreateScoreboardRequest = req.body;
-
-
+        const r: CreateScoreboardRequest = req.body;
         const imagePath = path.resolve('./public/images/sample.jpg'); // Path to your image
-
         const guid = uuidv4();
 
-        path.resolve(process.cwd(), 'fonts', 'fonts.conf');
-        path.resolve(process.cwd(), 'fonts', 'Jersey15-Regular.ttf');
 
+        //const plugin = require.resolve('@jimp/plugin-print');
+        const jimpFont = path.resolve('./public/fonts/open-sans-32-white.fnt');
 
-        const svgText = `<svg width="500" height="500">
-        <style>
-          .title { fill: #fff; font-size: 48px; text-anchor: middle; font-family: "Jersey15-Regular";}
-          .header { fill: #fff; font-size: 36px; text-anchor: middle; font-weight: bold; font-family: "Jersey15-Regular";}
-        </style>
-        <text x="250" y="30" class="header">Players</text>
-        <text x="250" y="70" class="header"># of beers</text>
-        <text x="250" y="120" class="title">${request.ScoreRows[0].Name}</text>
-      </svg>`;
-
-        const imageBuffer = await sharp(imagePath)
-            .composite([
-                { input: Buffer.from(svgText, 'utf-8'), top: 0, left: 0 }
-            ])
-            .jpeg() // Output as PNG (or jpeg, webp, etc.)
-            .toBuffer();
+        console.info("Image path:", imagePath);
+        console.info("Font path:", jimpFont);
 
 
 
+        // Load the image using Jimp
+        const image = await Jimp.read(imagePath);
 
-        var request2 = require('request');
-        var fs = require('fs');
-        var options = {
-            'method': 'POST',
-            'url': 'https://api.app.pixelgreet.com/Image/UploadImage2',
-            'headers': {
-            },
+        console.info("1");
+        const font = await Jimp.loadFont(jimpFont);
+
+
+        image.print(font, 250, 30, "Players", 500); // Ensure your text fits within the image width
+        image.print(font, 250, 70, "# of beers", 500);
+        image.print(font, 250, 120, r.ScoreRows[0].Name, 500);
+
+        // Get image buffer
+        const imageBuffer = await image.getBufferAsync(Jimp.MIME_JPEG);
+
+        // Set up options for the upload
+        const options = {
+            method: 'POST',
+            url: 'https://api.app.pixelgreet.com/Image/UploadImage2',
+            headers: {},
             formData: {
                 'Image': {
-                    'value': imageBuffer, // Updated to use the new image path
+                    'value': imageBuffer,
                     'options': {
                         'filename': `${guid}.jpg`,
-                        'contentType': null
+                        'contentType': 'image/jpeg'
                     }
                 },
                 'FileName': guid
             }
         };
-        request2(options, function (error: any, response: any) {
+
+        // Upload the image
+        request(options, function (error: any, response: any) {
             if (error) throw new Error(error);
-            console.log(response.body);
-            console.log("yay!!!")
-            res.status(200).json({ url: response.body, errorMessage: "", success: true });
-            return;
+            console.log("Image uploaded:", response.body);
+            return res.status(200).json({ url: response.body, errorMessage: "", success: true });
         });
 
-
-    } catch (error) {
-        console.log(error);
-        return res.status(200).json({ url: "", errorMessage: "an error occured", success: false });
-
+    } catch (error: any) {
+        console.error("Handler error:", error);
+        return res.status(200).json({ url: "", errorMessage: error, success: false });
     }
 }
